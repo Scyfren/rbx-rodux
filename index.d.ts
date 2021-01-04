@@ -68,7 +68,7 @@ declare namespace Rodux {
 		new <S, A extends Action, Ext1>(
 			reducer: Reducer<S, A>,
 			preloadedState?: DeepPartial<S>,
-			middleware?: [Middleware<Ext1, S>],
+			middleware?: [Middleware<Ext1, S, A>],
 		): EnhancedStore<S, A, Ext1>;
 
 		/**
@@ -77,7 +77,7 @@ declare namespace Rodux {
 		new <S, A extends Action, Ext1, Ext2>(
 			reducer: Reducer<S, A>,
 			preloadedState?: DeepPartial<S>,
-			middleware?: [Middleware<Ext1, S>, Middleware<Ext2, S>],
+			middleware?: [Middleware<Ext1, S, A>, Middleware<Ext2, S, A>],
 		): EnhancedStore<S, A, Ext1 & Ext2>;
 
 		/**
@@ -87,9 +87,9 @@ declare namespace Rodux {
 			reducer: Reducer<S, A>,
 			preloadedState?: DeepPartial<S>,
 			middleware?: [
-				Middleware<Ext1, S>,
-				Middleware<Ext2, S>,
-				Middleware<Ext3, S>,
+				Middleware<Ext1, S, A>,
+				Middleware<Ext2, S, A>,
+				Middleware<Ext3, S, A>,
 			],
 		): EnhancedStore<S, A, Ext1 & Ext2 & Ext3>;
 
@@ -100,10 +100,10 @@ declare namespace Rodux {
 			reducer: Reducer<S, A>,
 			preloadedState?: DeepPartial<S>,
 			middleware?: [
-				Middleware<Ext1, S>,
-				Middleware<Ext2, S>,
-				Middleware<Ext3, S>,
-				Middleware<Ext4, S>,
+				Middleware<Ext1, S, A>,
+				Middleware<Ext2, S, A>,
+				Middleware<Ext3, S, A>,
+				Middleware<Ext4, S, A>,
 			],
 		): EnhancedStore<S, A, Ext1 & Ext2 & Ext3 & Ext4>;
 	}
@@ -187,8 +187,8 @@ declare namespace Rodux {
 
 	// * Middleware *
 
-	interface Middleware<DispatchExt = {}, S = any> {
-		(nextDispatch: Dispatch<AnyAction>, store: S): (action: any) => any;
+	interface Middleware<DispatchExt = {}, S = any, A extends Action = AnyAction> {
+		(nextDispatch: Dispatch<A>, store: Store<S, A>): (action: A) => any;
 	}
 
 	const loggerMiddleware: Middleware;
@@ -203,7 +203,7 @@ declare namespace Rodux {
 		S = {},
 		A extends Action = AnyAction,
 		E = undefined
-	> = Middleware<ThunkDispatcher<EnhancedStore<S, A>, A>, S>;
+	> = Middleware<ThunkDispatcher<EnhancedStore<S, A>, A>, S, A>;
 
 	const thunkMiddleware: ThunkMiddleware;
 
